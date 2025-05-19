@@ -2,15 +2,7 @@ import { motion } from "motion/react";
 import { Link, useLocation } from "react-router-dom";
 import { buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "../ui/mode-toggle";
-
-const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/jobs", label: "Jobs" },
-  { to: "/profile", label: "Profile" },
-  { to: "/recommendations", label: "Find My Matches" },
-  { to: "/login", label: "Login" },
-  { to: "/signup", label: "Sign Up" },
-];
+import { ROUTES } from "../../constants/routes";
 
 export default function Navbar() {
   const location = useLocation();
@@ -26,16 +18,16 @@ export default function Navbar() {
           inreal.jobs
         </Link>
         <div className="flex gap-4 items-center">
-          {navLinks.map((link) => (
+          {Object.entries(ROUTES).map(([key, value]) => (
             <Link
-              key={link.to}
-              to={link.to}
+              key={value}
+              to={value}
               className={buttonVariants({
-                variant: location.pathname === link.to ? "default" : "ghost",
+                variant: location.pathname === value ? "default" : "ghost",
                 size: "sm",
               })}
             >
-              {link.label}
+              {key}
             </Link>
           ))}
           <ModeToggle />

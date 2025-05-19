@@ -20,10 +20,7 @@ function App() {
             <Route path={ROUTES.Signup} element={<Signup />} />
             <Route path={ROUTES.Profile} element={<Profile />} />
             <Route path={ROUTES.Jobs} element={<Jobs />} />
-            <Route
-              path={ROUTES.Recommendations}
-              element={<Recommendations />}
-            />
+            <Route path={ROUTES["AI Recommendations"]} element={<Recommendations />} />
           </Route>
         </Routes>
       </ThemeProvider>

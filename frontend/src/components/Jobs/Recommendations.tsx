@@ -1,15 +1,8 @@
+import type { Job } from "@/types";
 import { motion } from "motion/react";
 import JobCard from "./JobCard";
 
-type Job = {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  skills: string[];
-};
-
-export default function Recommendations({ jobs }: { jobs: Job[] }) {
+export function Recommendations({ jobs }: { jobs: Job[] }) {
   return (
     <div className="space-y-4">
       {jobs.map((job, i) => (
