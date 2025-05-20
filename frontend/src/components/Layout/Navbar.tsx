@@ -3,8 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import { buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "../ui/mode-toggle";
 import { ROUTES } from "../../constants/routes";
+import { useAuth } from "@/context/AuthContext";
+import LogoutButton from "../Auth/LogoutButton";
 
 export default function Navbar() {
+  const { user } = useAuth();
   const location = useLocation();
   return (
     <motion.nav
@@ -30,6 +33,31 @@ export default function Navbar() {
               {key}
             </Link>
           ))}
+          {user ? (
+            <LogoutButton />
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className={buttonVariants({
+                  variant: location.pathname === "/login" ? "default" : "ghost",
+                  size: "sm",
+                })}
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className={buttonVariants({
+                  variant:
+                    location.pathname === "/signup" ? "default" : "ghost",
+                  size: "sm",
+                })}
+              >
+                Signup
+              </Link>
+            </>
+          )}
           <ModeToggle />
         </div>
       </div>

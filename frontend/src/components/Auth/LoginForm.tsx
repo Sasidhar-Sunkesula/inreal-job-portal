@@ -1,5 +1,8 @@
+import { ROUTES } from "@/constants/routes";
+import { useAuth } from "@/context/AuthContext";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -7,11 +10,15 @@ import { Label } from "../ui/label";
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = (e: React.FormEvent) => {
+  const { login, loading } = useAuth();
+
+  const navigate = useNavigate();
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // TODO: Call login API
-    alert(`Login: ${email}, ${password}`);
-  };
+    await login(email, password);
+    navigate(ROUTES.Home);
+  }
+
   return (
     <motion.form
       initial={{ opacity: 0, y: 20 }}
@@ -26,6 +33,8 @@ export default function LoginForm() {
         <Input
           type="email"
           value={email}
+          placeholder="Enter your email"
+          autoComplete="email"
           onChange={(e) => setEmail(e.target.value)}
           required
         />
@@ -35,12 +44,14 @@ export default function LoginForm() {
         <Input
           type="password"
           value={password}
+          placeholder="Enter your password"
+          autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
-      <Button type="submit" className="w-full">
-        Login
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? "Logging in..." : "Login"}
       </Button>
     </motion.form>
   );

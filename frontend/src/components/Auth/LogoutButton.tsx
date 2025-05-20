@@ -1,18 +1,22 @@
+import { useAuth } from "@/context/AuthContext";
 import { motion } from "motion/react";
 import { buttonVariants } from "../ui/button";
 
 export default function LogoutButton() {
-  const handleLogout = () => {
-    // TODO: Call logout API
-    alert("Logged out");
-  };
+  const { logout, loading } = useAuth();
+
+  async function handleLogout() {
+    await logout();
+  }
+
   return (
     <motion.button
       whileTap={{ scale: 0.95 }}
-      className={buttonVariants({ variant: "default" })}
+      className={buttonVariants({ variant: "secondary" })}
       onClick={handleLogout}
+      disabled={loading}
     >
-      Logout
+      {loading ? "Logging out..." : "Logout"}
     </motion.button>
   );
 }

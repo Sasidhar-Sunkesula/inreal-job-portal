@@ -35,8 +35,8 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      secure: true,
-      sameSite: "strict",
+      sameSite: "lax",
+      path: '/'
     });
     res.json({
       user: {
@@ -76,8 +76,8 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      secure: true,
-      sameSite: "strict",
+      sameSite: "lax",
+      path: '/'
     });
     res.status(201).json({
       user: {

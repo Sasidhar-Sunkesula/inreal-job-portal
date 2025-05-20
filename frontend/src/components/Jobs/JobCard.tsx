@@ -11,16 +11,23 @@ export default function JobCard({ job }: { job: Job }) {
         <h3 className="text-xl font-bold text-primary">{job.title}</h3>
         <span className="text-sm text-muted-foreground">{job.location}</span>
       </div>
-      <div className="text-muted-foreground mb-2 text-sm">{job.company}</div>
-      <div className="flex flex-wrap gap-2">
-        {job.skills.map((skill) => (
-          <span
-            key={skill}
-            className="px-2 py-1 bg-muted rounded-full text-xs text-muted-foreground"
-          >
-            {skill}
-          </span>
-        ))}
+      <div className="text-muted-foreground mb-2 text-sm">
+        {job.company.name}
+      </div>
+      <div className="flex flex-wrap gap-2 justify-between items-center">
+        <div className="flex flex-wrap gap-2">
+          {job.skills.map((skill) => (
+            <span
+              key={skill}
+              className="px-2 py-1 bg-muted rounded-full text-xs text-muted-foreground"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+        <span className="text-sm text-muted-foreground">
+          {new Date(job.updatedAt).toLocaleDateString()}
+        </span>
       </div>
     </motion.div>
   );

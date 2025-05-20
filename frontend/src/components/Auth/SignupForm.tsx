@@ -1,5 +1,8 @@
+import { ROUTES } from "@/constants/routes";
+import { useAuth } from "@/context/AuthContext";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -8,11 +11,15 @@ export default function SignupForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = (e: React.FormEvent) => {
+  const { signup, loading } = useAuth();
+  const navigate = useNavigate();
+  
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // TODO: Call signup API
-    alert(`Signup: ${name}, ${email}`);
-  };
+    await signup(name, email, password);
+    navigate(ROUTES.Home);
+  }
+  
   return (
     <motion.form
       initial={{ opacity: 0, y: 20 }}
@@ -27,6 +34,8 @@ export default function SignupForm() {
         <Input
           type="text"
           value={name}
+          placeholder="Enter your name"
+          autoComplete="name"
           onChange={(e) => setName(e.target.value)}
           required
         />
@@ -36,6 +45,8 @@ export default function SignupForm() {
         <Input
           type="email"
           value={email}
+          placeholder="Enter your email"
+          autoComplete="email"
           onChange={(e) => setEmail(e.target.value)}
           required
         />
@@ -45,12 +56,14 @@ export default function SignupForm() {
         <Input
           type="password"
           value={password}
+          placeholder="Enter your password"
+          autoComplete="new-password"
           onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
-      <Button type="submit" className="w-full">
-        Sign Up
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? "Signing up..." : "Sign Up"}
       </Button>
     </motion.form>
   );
