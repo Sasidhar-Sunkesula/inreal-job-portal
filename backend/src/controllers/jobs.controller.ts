@@ -7,15 +7,23 @@ export async function getJobs(req: Request, res: Response, next: NextFunction) {
     const page = parseInt(req.query.page as string) || 0;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = page * limit;
-    const jobs = await client.company.findMany({
-      include: {
-        jobs: {
-          skip,
-          take: limit,
+    const jobs = await client.job.findMany({
+      skip,
+      take: limit,
+      select: {
+        id: true,
+        title: true,
+        company: {
+          select: {
+            name: true,
+          },
         },
+        location: true,
+        skills: true,
+        updatedAt: true,
       },
     });
-    res.json(jobs);
+    res.json({ jobs });
   } catch (error) {
     next(error);
   }
@@ -40,6 +48,18 @@ export async function applyJob(
     });
     if (!job) {
       res.status(404).json({ message: "Job not found" });
+      return;
+    }
+    const application = await client.application.findUnique({
+      where: {
+        userId_jobId: {
+          jobId,
+          userId,
+        },
+      },
+    });
+    if (application) {
+      res.status(400).json({ message: "Already applied" });
       return;
     }
     await client.application.create({

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import client from "../db/client";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id: string) => {
@@ -38,7 +38,13 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
       secure: true,
       sameSite: "strict",
     });
-    res.json({ user });
+    res.json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -73,7 +79,13 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
       secure: true,
       sameSite: "strict",
     });
-    res.status(201).json({ user });
+    res.status(201).json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (error) {
     next(error);
   }
