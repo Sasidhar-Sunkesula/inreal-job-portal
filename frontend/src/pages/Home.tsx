@@ -34,7 +34,7 @@ export default function Home() {
         className="flex gap-4 justify-center"
       >
         <Link
-          to={ROUTES.Login}
+          to="/login"
           className={buttonVariants({
             variant: "default",
             size: "lg",

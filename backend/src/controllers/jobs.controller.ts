@@ -1,16 +1,17 @@
-import { generateText } from "ai";
+import { generateObject, generateText } from "ai";
 import { NextFunction, Request, Response } from "express";
 import client from "../db/client";
 import { getRecommendationPrompt } from "../prompts/recommendation.prompt";
 import { model } from "../providers";
+import z from "zod";
 
 export async function getJobs(req: Request, res: Response, next: NextFunction) {
   try {
+    const userId = req.userId;
     // Pagination
     const page = parseInt(req.query.page as string) || 0;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = page * limit;
-    const userId = req.userId;
 
     const jobs = await client.job.findMany({
       skip,
@@ -132,24 +133,18 @@ export async function recommendJobs(
     });
 
     // Call the LLM
-    const { text } = await generateText({
+    const { object } = await generateObject({
       model: model,
       prompt: getRecommendationPrompt(user, jobs),
+      mode: "json",
+      schema: z.object({
+        jobs: z.array(z.string()),
+      }),
     });
-
-    // Try to parse the response as JSON
-    let recommendations;
-    try {
-      recommendations = JSON.parse(text);
-    } catch (e) {
-      res
-        .status(500)
-        .json({ message: "Failed to parse AI response", raw: text });
-      return;
-    }
+    console.log(object);
 
     res.json({
-      recommendations: (recommendations.jobs as string[]).map((id) =>
+      recommendations: (object.jobs as string[]).map((id) =>
         jobs.find((job) => job.id === id)
       ),
     });

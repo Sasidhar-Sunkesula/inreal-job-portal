@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import JobList from "../components/Jobs/JobList";
 import { Input } from "../components/ui/input";
-import { useJobs } from "../hooks/useJobs";
+import { useJobs } from "@/context/JobContext";
 import { Loader } from "lucide-react";
 
 export default function Jobs() {

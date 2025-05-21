@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import { ThemeProvider } from "./components/ui/theme-provider";
 import AuthProvider from "./context/AuthContext";
+import { JobProvider } from "./context/JobContext";
 import Home from "./pages/Home";
 import Jobs from "./pages/Jobs";
 import Login from "./pages/Login";
@@ -14,6 +15,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <JobProvider>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Toaster />
           <Routes>
@@ -27,6 +29,7 @@ function App() {
             </Route>
           </Routes>
         </ThemeProvider>
+        </JobProvider>
       </AuthProvider>
     </BrowserRouter>
   );

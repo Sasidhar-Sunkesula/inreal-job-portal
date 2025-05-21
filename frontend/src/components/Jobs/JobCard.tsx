@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
-import { useJobs } from "@/hooks/useJobs";
+import { useJobs } from "@/context/JobContext";
 import type { Job } from "@/types";
 import { motion } from "motion/react";
 import { toast } from "react-hot-toast";

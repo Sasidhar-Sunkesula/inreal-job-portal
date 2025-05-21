@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { API_URL } from "../constants";
+import { ROUTES } from "../constants/routes";
 import type { User } from "../types";
 
 interface AuthContextType {
@@ -29,6 +31,7 @@ export default function AuthProvider({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   async function login(email: string, password: string) {
     try {
@@ -47,8 +50,9 @@ export default function AuthProvider({
       }
       setUser(data.user);
       toast.success("Login successful");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unexpected error");
+      navigate(ROUTES.Home);
+    } catch {
+      toast.error("Unexpected error, please try again");
     } finally {
       setLoading(false);
     }
@@ -87,8 +91,8 @@ export default function AuthProvider({
       }
       setUser(data.user);
       toast.success("Signup successful");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unexpected error");
+    } catch {
+      toast.error("Unexpected error, please try again");
     } finally {
       setLoading(false);
     }
@@ -105,9 +109,11 @@ export default function AuthProvider({
         throw new Error(data.message);
       }
       setUser(null);
+      // refresh the page
+      window.location.reload();
       toast.success("Logout successful");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unexpected error");
+    } catch {
+      toast.error("Unexpected error, please try again");
     } finally {
       setLoading(false);
     }

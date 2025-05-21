@@ -34,7 +34,19 @@ export default function Navbar() {
             </Link>
           ))}
           {user ? (
-            <LogoutButton />
+            <>
+              <Link
+                to="/profile"
+                className={buttonVariants({
+                  variant:
+                    location.pathname === "/profile" ? "default" : "ghost",
+                  size: "sm",
+                })}
+              >
+                Profile
+              </Link>
+              <LogoutButton />
+            </>
           ) : (
             <>
               <Link

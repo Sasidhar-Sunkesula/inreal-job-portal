@@ -1,4 +1,5 @@
 import { API_URL } from "@/constants";
+import { useAuth } from "@/context/AuthContext";
 import type { Job } from "@/types";
 import { Loader } from "lucide-react";
 import { motion } from "motion/react";
@@ -9,17 +10,20 @@ import JobCard from "./JobCard";
 export function Recommendations() {
   const [recommendations, setRecommendations] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
+    if (!user) return;
     async function getRecommendations() {
       setLoading(true);
       try {
-        const response = await fetch(`${API_URL}/api/recommendations`);
+        const response = await fetch(`${API_URL}/api/jobs/recommendations`, {
+          credentials: "include",
+        });
         const data = await response.json();
         if (!response.ok) {
           throw new Error("Failed to fetch recommendations");
         }
-        console.log(data);
         setRecommendations(data.recommendations);
       } catch {
         toast.error("Failed to fetch recommendations. Please try again.");
@@ -28,7 +32,7 @@ export function Recommendations() {
       }
     }
     getRecommendations();
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (

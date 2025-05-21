@@ -1,5 +1,6 @@
 import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/context/AuthContext";
+import type { User } from "@/types";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import type { User } from "@/types";
 
 const skillsList = [
   "JavaScript",
@@ -123,7 +123,7 @@ export default function SignupForm() {
       >
         {step === 1 ? (
           // Step 1: Basic Information
-          <>
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Name</Label>
               <Input
@@ -157,10 +157,10 @@ export default function SignupForm() {
                 required
               />
             </div>
-          </>
+          </div>
         ) : (
           // Step 2: Profile Information
-          <>
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Location</Label>
               <Input
@@ -220,7 +220,7 @@ export default function SignupForm() {
                 ))}
               </div>
             </div>
-          </>
+          </div>
         )}
       </motion.div>
 

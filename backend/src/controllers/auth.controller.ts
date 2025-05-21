@@ -45,6 +45,10 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
         id: user.id,
         name: user.name,
         email: user.email,
+        location: user.location,
+        experience: user.experience,
+        skills: user.skills,
+        preference: user.preference,
       },
     });
   } catch (error) {

@@ -1,8 +1,6 @@
-import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -12,11 +10,9 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const { login, loading } = useAuth();
 
-  const navigate = useNavigate();
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     await login(email, password);
-    navigate(ROUTES.Home);
   }
 
   return (
