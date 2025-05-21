@@ -38,67 +38,26 @@ The AI prompt is designed to:
 1. Understand user's skills, experience, and preferences
 2. Analyze job requirements and match them with user profile
 3. Consider location preferences and job type
-
-## Setup Instructions
-
-### Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/inreal-job-portal.git
-cd inreal-job-portal
-```
-
-2. Install dependencies:
-
-```bash
-# Frontend
-npm install
-
-# Backend
-npm install
-```
-
-3. Set up environment variables:
-Create `.env` files in both frontend and backend directories:
-
-```
-# Frontend .env
-NEXT_PUBLIC_API_URL=http://localhost:3001
-
-# Backend .env
-DATABASE_URL=postgresql://username:password@localhost:5432/inreal
-JWT_SECRET=your_jwt_secret
-GROK_API_KEY=your_grok_api_key
-```
-
-4. Start the development servers:
-
-```bash
-# Backend
-npm run dev
-
-# Frontend (in a new terminal)
-npm run dev
-```
+4. Return the top 3 most relevant jobs for the user
 
 ## API Documentation
 
-### Authentication
+### Authentication Routes
 
 - POST /api/auth/signup - Create new user
 - POST /api/auth/login - User login
 - POST /api/auth/logout - User logout
 
-### Profile Management
+### User Routes
 
-- GET /api/profile - Get user profile
-- PUT /api/profile - Update user profile
+- GET /api/user - Get user profile
+- PUT /api/user/profile - Update user profile
 
-### Job Recommendations
+### Job Routes
 
-- POST /api/recommendations - Get AI-powered job recommendations
+- GET /api/jobs - Get all jobs
+- POST /api/jobs/apply - Apply for a job
+- GET /api/jobs/recommendations - Get AI-powered job recommendations
 
 ## Code Architecture
 
@@ -111,10 +70,11 @@ npm run dev
 
 ### Backend
 
-- Routes: API endpoints
+- Prisma: Database ORM for PostgreSQL models
 - Controllers: Business logic
-- Models: PostgreSQL schemas
-- Services: AI integration and job matching
+- Middleware: Authentication and error handling
+- Routes: API endpoints
+- Zod: Input validation
 
 ## Trade-offs and Assumptions
 
