@@ -109,7 +109,11 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
 
 export async function logout(req: Request, res: Response, next: NextFunction) {
   try {
-    res.clearCookie("jwt");
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: 'none', // Allow cross-site requests
+      secure: true, // Ensure the cookie is sent over HTTPS
+    });
     res.json({ message: "Logout successful" });
   } catch (error) {
     next(error);
