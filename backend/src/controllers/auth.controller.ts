@@ -37,8 +37,8 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      sameSite: "lax",
-      path: "/",
+      sameSite: 'none', // Allow cross-site requests
+      secure: true, // Ensure the cookie is sent over HTTPS
     });
     res.json({
       user: {
@@ -88,8 +88,8 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      sameSite: "lax",
-      path: "/",
+      sameSite: 'none', // Allow cross-site requests
+      secure: true, // Ensure the cookie is sent over HTTPS
     });
     res.status(201).json({
       user: {
