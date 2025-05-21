@@ -19,6 +19,10 @@ model User {
   name         String
   email        String        @unique
   password     String
+  location     String?
+  experience   Int?
+  preference   JobType?
+  skills       String[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   applications Application[]
@@ -36,8 +40,8 @@ model Job {
   id           String        @id @default(cuid())
   title        String
   companyId    String
-  location     String
   skills       String[]
+  type         JobType
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   company      Company       @relation(fields: [companyId], references: [id])
@@ -53,4 +57,11 @@ model Application {
   job       Job      @relation(fields: [jobId], references: [id])
 
   @@unique([userId, jobId])
+}
+
+enum JobType {
+  Remote
+  Onsite
+  Hybrid
+  Any
 }

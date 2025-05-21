@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@ai-sdk/groq": "^1.2.9",
     "@prisma/client": "^6.8.2",
     "ai": "^4.3.16",
     "bcryptjs": "^3.0.2",
@@ -20,7 +21,8 @@
     "esbuild": "^0.25.4",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^6.8.2"
+    "prisma": "^6.8.2",
+    "zod": "^3.25.16"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",

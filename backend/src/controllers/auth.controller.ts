@@ -1,7 +1,8 @@
-import { NextFunction, Request, Response } from "express";
-import client from "../db/client";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import client from "../db/client";
+import { loginSchema, registerSchema } from "../zod";
 
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id: string) => {
@@ -15,10 +16,11 @@ const createToken = (id: string) => {
 
 export async function signIn(req: Request, res: Response, next: NextFunction) {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      throw new Error("Email and password are required");
+    const validated = loginSchema.safeParse(req.body);
+    if (!validated.success) {
+      throw new Error(validated.error.message);
     }
+    const { email, password } = validated.data;
     const user = await client.user.findUnique({
       where: {
         email,
@@ -36,7 +38,7 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
       httpOnly: true,
       maxAge: maxAge * 1000,
       sameSite: "lax",
-      path: '/'
+      path: "/",
     });
     res.json({
       user: {
@@ -52,10 +54,12 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
 
 export async function signUp(req: Request, res: Response, next: NextFunction) {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      throw new Error("Name, email, and password are required");
+    const validated = registerSchema.safeParse(req.body);
+    if (!validated.success) {
+      throw new Error(validated.error.message);
     }
+    const { name, email, password, location, experience, skills, preference } =
+      validated.data;
     const existingUser = await client.user.findUnique({
       where: {
         email,
@@ -70,6 +74,10 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
         name,
         email,
         password: hash,
+        location,
+        experience,
+        skills: skills || [],
+        preference,
       },
     });
     const token = createToken(user.id);
@@ -77,13 +85,17 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
       httpOnly: true,
       maxAge: maxAge * 1000,
       sameSite: "lax",
-      path: '/'
+      path: "/",
     });
     res.status(201).json({
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
+        location: user.location,
+        experience: user.experience,
+        skills: user.skills,
+        preference: user.preference,
       },
     });
   } catch (error) {
