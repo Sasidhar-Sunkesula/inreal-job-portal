@@ -1,5 +1,9 @@
+import { useAuth } from "@/context/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
+import type { User } from "@/types";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -23,14 +27,15 @@ const skillsList = [
   "AI/ML",
   "DevOps",
 ];
-const jobTypes = ["remote", "onsite", "any"];
+const jobTypes: User["preference"][] = ["Remote", "Hybrid", "Onsite", "Any"];
 
 export default function ProfileForm() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const [experience, setExperience] = useState("");
+  const [experience, setExperience] = useState<number | null>(null);
   const [skills, setSkills] = useState<string[]>([]);
-  const [jobType, setJobType] = useState("any");
+  const [jobType, setJobType] = useState<User["preference"]>("Any");
+  const { user } = useAuth();
 
   const handleSkillToggle = (skill: string) => {
     setSkills(
@@ -40,14 +45,33 @@ export default function ProfileForm() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setLocation(user.location);
+      setExperience(user.experience);
+      setSkills(user.skills);
+      setJobType(user.preference);
+    }
+  }, [user]);
+
+  const { updateProfile, loading: profileLoading } = useProfile();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Call profile API
-    alert(
-      `Profile: ${name}, ${location}, ${experience}, ${skills.join(
-        ", "
-      )}, ${jobType}`
-    );
+    try {
+      await updateProfile({
+        name,
+        location,
+        experience: experience || 0,
+        skills,
+        preference: jobType,
+      });
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      toast.error("Failed to update profile. Please try again.");
+    }
   };
 
   return (
@@ -80,8 +104,8 @@ export default function ProfileForm() {
         <Input
           type="number"
           min="0"
-          value={experience}
-          onChange={(e) => setExperience(e.target.value)}
+          value={experience || ""}
+          onChange={(e) => setExperience(parseInt(e.target.value))}
           required
         />
       </div>
@@ -103,7 +127,10 @@ export default function ProfileForm() {
       </div>
       <div className="space-y-2">
         <Label className="block font-medium">Preferred Job Type</Label>
-        <Select value={jobType} onValueChange={setJobType}>
+        <Select
+          value={jobType}
+          onValueChange={(value) => setJobType(value as User["preference"])}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select a job type" />
           </SelectTrigger>
@@ -116,8 +143,8 @@ export default function ProfileForm() {
           </SelectContent>
         </Select>
       </div>
-      <Button type="submit" className="w-full">
-        Save Profile
+      <Button type="submit" className="w-full" disabled={profileLoading}>
+        {profileLoading ? "Saving..." : "Save Profile"}
       </Button>
     </motion.form>
   );

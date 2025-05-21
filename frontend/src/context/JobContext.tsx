@@ -1,9 +1,19 @@
-import { useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { toast } from "react-hot-toast";
 import { API_URL } from "../constants";
 import type { Job } from "../types";
 
-export function useJobs() {
+interface JobContextType {
+  jobs: Job[];
+  loading: boolean;
+  applyingJobId: string | null;
+  fetchJobs: () => Promise<void>;
+  applyForJob: (jobId: string) => Promise<void>;
+}
+
+const JobContext = createContext<JobContextType | undefined>(undefined);
+
+export function JobProvider({ children }: { children: React.ReactNode }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
   const [applyingJobId, setApplyingJobId] = useState<string | null>(null);
@@ -60,11 +70,26 @@ export function useJobs() {
     }
   }
 
-  return {
-    jobs,
-    fetchJobs,
-    loading,
-    applyForJob,
-    applyingJobId,
-  };
+  return (
+    <JobContext.Provider
+      value={{
+        jobs,
+        loading,
+        applyingJobId,
+        fetchJobs,
+        applyForJob,
+      }}
+    >
+      {children}
+    </JobContext.Provider>
+  );
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function useJobs() {
+  const context = useContext(JobContext);
+  if (context === undefined) {
+    throw new Error("useJobs must be used within a JobProvider");
+  }
+  return context;
 }

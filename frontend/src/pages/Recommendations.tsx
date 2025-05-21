@@ -1,29 +1,4 @@
-import type { Job } from "@/types";
 import { Recommendations } from "../components/Jobs/Recommendations";
-
-const recommendedJobs: Job[] = [
-  {
-    id: "1",
-    title: "Frontend Developer",
-    company: "TechCorp",
-    location: "Remote",
-    skills: ["React", "TypeScript", "CSS"],
-  },
-  {
-    id: "3",
-    title: "AI Specialist",
-    company: "AIMinds",
-    location: "Remote",
-    skills: ["Python", "AI/ML", "DevOps"],
-  },
-  {
-    id: "4",
-    title: "Full Stack Developer",
-    company: "Webify",
-    location: "Remote",
-    skills: ["React", "Node.js", "Tailwind"],
-  },
-];
 
 export default function RecommendationsPage() {
   return (
@@ -34,7 +9,7 @@ export default function RecommendationsPage() {
           Based on your profile, here are some job recommendations for you by AI
         </p>
       </div>
-      <Recommendations jobs={recommendedJobs} />
+      <Recommendations />
     </div>
   );
 }

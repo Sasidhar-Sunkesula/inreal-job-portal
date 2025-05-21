@@ -6,8 +6,17 @@ import type { User } from "../types";
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  setUser: (user: User | null) => void;
   login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string) => Promise<void>;
+  signup: (
+    name: string, 
+    email: string, 
+    password: string, 
+    location: string, 
+    experience: number, 
+    skills: string[], 
+    preference: User["preference"]
+  ) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -45,7 +54,15 @@ export default function AuthProvider({
     }
   }
 
-  async function signup(name: string, email: string, password: string) {
+  async function signup(
+    name: string, 
+    email: string, 
+    password: string, 
+    location: string, 
+    experience: number, 
+    skills: string[], 
+    preference: User["preference"]
+  ) {
     try {
       setLoading(true);
       const res = await fetch(`${API_URL}/api/auth/signup`, {
@@ -54,7 +71,15 @@ export default function AuthProvider({
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ 
+          name, 
+          email, 
+          password, 
+          location, 
+          experience, 
+          skills, 
+          preference 
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -115,7 +140,7 @@ export default function AuthProvider({
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, setUser, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

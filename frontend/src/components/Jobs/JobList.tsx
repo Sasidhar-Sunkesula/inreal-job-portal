@@ -3,6 +3,7 @@ import JobCard from "./JobCard";
 
 export default function JobList({ jobs }: { jobs: Job[] }) {
   if (!jobs.length) return <div>No jobs found.</div>;
+
   return (
     <div>
       {jobs.map((job) => (
